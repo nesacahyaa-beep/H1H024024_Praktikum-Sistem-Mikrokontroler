@@ -1,81 +1,40 @@
 # Percobaan 2 – Running LED
 
-Percobaan ini bertujuan untuk mempelajari pengendalian LED menggunakan Arduino Uno. Percobaan mencakup:  
-1. Gambaran rangkaian schematic LED.  
-2. LED berjalan dari kiri ke kanan.  
-3. LED berjalan dari kanan ke kiri (*bounce effect*).  
-4. LED tiga kiri dan tiga kanan menyala bergantian.
+Percobaan ini bertujuan mempelajari pengendalian LED menggunakan Arduino Uno. Praktikum ini mencakup empat soal utama mengenai efek LED dan programnya.
 
 ---
 
-## 1. Rangkaian Schematic LED
+## 1. Gambarkan rangkaian schematic LED
 
-Rangkaian menggunakan 5 LED yang disusun paralel dengan resistor 220 Ω untuk membatasi arus.  
-- Anoda LED dihubungkan ke pin digital Arduino (2–6).  
-- Katoda LED dihubungkan ke resistor, kemudian ke GND.  
+Rangkaian menggunakan 5 LED yang disusun paralel dengan resistor 220 Ω untuk membatasi arus. Kaki anoda setiap LED dihubungkan ke pin digital Arduino (2–6), sedangkan kaki katoda dihubungkan ke resistor yang kemudian ke GND. Penggunaan resistor memastikan arus aman sehingga LED dan pin mikrokontroler tidak rusak.
 
 ![Percobaan 2 – Running LED](images/percobaan2.jpeg)
 
 ---
 
-## 2. Program LED Berjalan dari Kiri ke Kanan dan Kanan ke Kiri
+## 2. LED Berjalan dari Kiri ke Kanan
 
-### Kiri ke Kanan
-LED dinyalakan satu per satu dari pin kecil ke besar untuk membuat efek bergerak dari kiri ke kanan.
+Program Arduino membuat LED terlihat berjalan dari kiri ke kanan menggunakan konsep *running LED*. LED dinyalakan satu per satu dari pin dengan nomor kecil ke besar sehingga terlihat seperti cahaya bergerak. Setiap LED dinyalakan selama jeda tertentu menggunakan fungsi `delay()` sebelum dimatikan, sehingga efek pergerakan dapat diamati dengan jelas. Perulangan `for` memungkinkan kontrol LED secara berurutan tanpa menulis kode untuk setiap pin, membuat program lebih ringkas dan mudah dikembangkan.
 
-```cpp
-for (int ledPin = 2; ledPin <= 6; ledPin++) {
-    digitalWrite(ledPin, HIGH); // Nyalakan LED
-    delay(200);                  // Tunggu 200 ms
-    digitalWrite(ledPin, LOW);   // Matikan LED sebelum pindah LED berikutnya
-}
-## 3. Jelaskan bagaimana program membuat LED kembali dari kanan ke kiri
+---
 
-Setelah LED berjalan dari kiri ke kanan, efek *running LED* dapat dibalik agar LED menyala dari kanan ke kiri (*bounce effect*).  
+## 3. LED Berjalan dari Kanan ke Kiri
 
-### Kode Program
+Setelah LED menyala dari kiri ke kanan, program dapat membalik efek sehingga LED menyala dari kanan ke kiri, menghasilkan efek bolak-balik (*bounce effect*). Hal ini dicapai dengan menggunakan perulangan `for` yang dimulai dari pin dengan nomor terbesar (kanan) menuju pin dengan nomor terkecil (kiri). Setiap LED dinyalakan satu per satu dengan jeda tertentu menggunakan fungsi `delay()`, kemudian dimatikan sebelum pindah ke LED berikutnya. Mekanisme ini menciptakan ilusi pergerakan LED dari kanan ke kiri secara berurutan, sehingga pengguna dapat melihat efek LED bergerak bolak-balik.
 
-```cpp
-for (int ledPin = 6; ledPin >= 2; ledPin--) {
-    digitalWrite(ledPin, HIGH); // Nyalakan LED
-    delay(200);                  // Tunggu 200 ms agar LED terlihat menyala
-    digitalWrite(ledPin, LOW);   // Matikan LED sebelum pindah ke LED berikutnya
-}
-## 4. Program agar LED menyala tiga LED kanan dan tiga LED kiri secara bergantian
+---
 
-Program ini membuat LED menyala secara bergantian antara tiga LED kiri dan tiga LED kanan menggunakan array dan perulangan `for`.
+## 4. LED Tiga Kiri dan Tiga Kanan Bergantian
 
-### Kode Program
+Program untuk menyalakan tiga LED kiri dan tiga LED kanan secara bergantian memanfaatkan konsep pengelompokan pin LED dalam array dan perulangan `for`. LED pada kelompok kiri dinyalakan satu per satu, diberi jeda agar nyala terlihat jelas, lalu dimatikan secara berurutan. Setelah itu, LED pada kelompok kanan menyala secara bergantian dengan mekanisme yang sama. Proses ini diulang terus-menerus sehingga terlihat efek LED bergantian antara sisi kiri dan kanan. Pendekatan ini efisien karena menggunakan perulangan untuk mengontrol beberapa LED sekaligus tanpa menulis kode individual untuk setiap pin.
 
-```cpp
-// Deklarasi pin LED kiri dan kanan
-int ledKiri[] = {2, 3, 4};   // Pin LED kiri
-int ledKanan[] = {5, 6, 7};  // Pin LED kanan
+---
 
-void setup() {
-  // Mengatur semua pin LED sebagai OUTPUT
-  for (int i = 0; i < 3; i++) {
-    pinMode(ledKiri[i], OUTPUT);  // Set pin LED kiri sebagai OUTPUT
-    pinMode(ledKanan[i], OUTPUT); // Set pin LED kanan sebagai OUTPUT
-  }
-}
+## Kesimpulan
 
-void loop() {
-  // Nyalakan LED kiri
-  for (int i = 0; i < 3; i++) {
-    digitalWrite(ledKiri[i], HIGH); // Nyalakan LED kiri satu per satu
-  }
-  delay(500); // Tunggu agar LED menyala terlihat
-  for (int i = 0; i < 3; i++) {
-    digitalWrite(ledKiri[i], LOW);  // Matikan LED kiri
-  }
+Dari percobaan ini, dapat disimpulkan bahwa:
 
-  // Nyalakan LED kanan
-  for (int i = 0; i < 3; i++) {
-    digitalWrite(ledKanan[i], HIGH); // Nyalakan LED kanan satu per satu
-  }
-  delay(500); // Tunggu agar LED menyala terlihat
-  for (int i = 0; i < 3; i++) {
-    digitalWrite(ledKanan[i], LOW);  // Matikan LED kanan
-  }
-}
+- Perulangan `for` memungkinkan LED dikontrol secara sistematis dan efisien, menciptakan efek bergerak dari kiri ke kanan maupun kanan ke kiri.  
+- Penggunaan array dan perulangan dapat membuat LED menyala bergantian antara dua kelompok, mempermudah pengaturan tanpa kode berulang.  
+- Fungsi `delay()` penting untuk membuat perubahan LED terlihat oleh mata manusia.  
+- Praktikum ini menunjukkan hubungan antara logika program dan kerja perangkat keras, yang menjadi dasar pengendalian embedded system menggunakan Arduino.
